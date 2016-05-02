@@ -1,0 +1,9 @@
+WTForms
+Flask
+Flask-SQLAlchemy
+Flask-Login
+flask-Script
+Flask-And-Redis
+Flask-Mail
+Flask-WTF
+PyMySQL

@@ -1,0 +1,352 @@
+{% extends 'base.html' %}
+
+{% block css %}
+    <link rel="stylesheet" href="/static/plugins/buttons/css/buttons.css">
+    <link rel="stylesheet" href="/static/plugins/datetimepicker/css/bootstrap-datetimepicker.min.css">
+{% endblock %}
+
+{% block header %}
+          <h1>
+            Users Manage
+          </h1>
+          <ol class="breadcrumb">
+            <li><a href="/"><i class="fa fa-table"></i> Home</a></li>
+            <li class="active">Users manage</li>
+          </ol>
+
+{% endblock %}
+
+{% block main %}
+          <div class="row">
+            <div class="col-md-12">
+              <!-- User Manage -->
+              <div class="box">
+                <div class="box-header">
+                  <h3 class="box-title">Users</h3>
+                  <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                  </div>
+
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                  <!-- search form -->
+                  <div class="col-md-5  pull-right">
+                    <table class="table">
+                      <tr>
+                        <form action="" method="post" id="search">
+                          {{ form.hidden_tag() }}
+                          <input type="hidden" id="s" name="s">
+                          <td>
+                            <input type="number" id="s_port" name="port" class="form-control" placeholder="Search with port">
+                          </td>
+                          <td>
+                            <input type="email" id="s_email" name="email" class="form-control" placeholder="Search with email">
+                          </td>
+                          <td>
+                            <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
+                          </td>
+                        </form>
+                      </tr>
+                    </table>
+                  </div>
+                  <!-- /.search form -->
+                  <table class="table table-bordered" id="users">
+                    <tr>
+                      <th>ID</th>
+                      <th>User</th>
+                      <th>Expire date</th>
+                      <th style="width: 60px">Transfer/GB</th>
+                      <th>Usage</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+
+                  </table>
+                </div><!-- /.box-body -->
+                <div class="box-footer clearfix">
+                  <div class="pull-left hidden-xs">
+                  </div>
+                  <ul class="pagination pagination-sm no-margin pull-right">
+                  </ul>
+                </div>
+              </div><!-- ./ box -->
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+
+          <div class="row">
+            <div class="col-md-12">
+              <!-- TABLE -->
+              <div class="box" id="edit">
+                <div class="box-header">
+                  <h3 class="box-title">Edit</h3>
+                  <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                  </div>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                  <table class="table table-bordered" id="info">
+                    <tr>
+                      <th>User</th>
+                      <th>Transfer</th>
+                      <th>Expire date</th>
+                    </tr>
+                    <tr>
+                      <form role="form" id="form_info" action="" method="post">
+                        {{ form.hidden_tag() }}
+                        <input type="hidden" class="form-control" name="id" readonly>
+                        <td><input type="email" class="form-control" placeholder="Email" id="email" name="email"></td>
+                        <td>
+                          <input type="number" class="form-control" placeholder="Transfer" data-toggle="tooltip" title="GB" id="transfer" name="transfer">
+                        </td>
+                        <td><input type="datetime" class="form-control" placeholder="Expire date" id="expire" name="expire" readonly></td>
+                        <td class="center">
+                          <button type="submit" class="button button-primary button-small" id="btn_info">
+                            <i class="fa fa-floppy-o"></i>
+                          </button>
+                        </td>
+                      </form>
+                    </tr>
+                  </table>
+                  <table class="table table-bordered" id="service">
+                    <tr>
+                      <th>Upload</th>
+                      <th>Download</th>
+                      <th>Password</th>
+                      <th>Port</th>
+                      <th style="width: 10px">Enable</th>
+                    </tr>
+                    <tr>
+                      <form role="form" id="form_service" action="" method="post">
+                        {{ form.hidden_tag() }}
+                        <input type="hidden" class="form-control" name="id" readonly>
+                        <td><input type="number" class="form-control" placeholder="Upload" data-toggle="tooltip" title="Byte" id="upload" name="upload"></td>
+                        <td><input type="number" class="form-control" placeholder="Download" data-toggle="tooltip" title="Byte" id="download" name="download"></td>
+                        <td><input type="text" class="form-control" placeholder="Password" id="password" name="password"></td>
+                        <td><input type="number" class="form-control" placeholder="Port" id="port" name="port"></td>
+                        <td><input type="text" class="form-control" placeholder="Enable" id="enable" name="enable"></td>
+                        <td>
+                          <button class="button button-caution button-small" id="btn_service">
+                            <i class="fa fa-floppy-o"></i>
+                          </button>
+                        </td>
+                      </form>
+                    </tr>
+                  </table>
+                </div><!-- /.box-body -->
+                <div class="box-footer clearfix">
+                  <div class="pull-left hidden-xs">
+                    <b></b>
+                  </div>
+                </div>
+              </div><!-- ./ box -->
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+
+          <div class="row">
+            <div class="col-md-3">
+              <div class="box box-danger" id="response">
+                <div class="box-header with-border">
+                  <h3 class="box-title" id="resp_header">Removable</h3>
+                  <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                  </div><!-- /.box-tools -->
+                </div><!-- /.box-header -->
+                <div class="box-body" id="resp_body">
+                </div><!-- /.box-body -->
+              </div><!-- ./ box -->
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+{% endblock %}
+
+
+{% block js %}
+    <script src="/static/js/utils.js"></script>
+    <script src="/static/plugins/json/jquery.json.min.js"></script>
+    <script src="/static/plugins/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="/static/plugins/form/jquery.form.js"></script>
+{% endblock %}
+
+{% block javascript %}
+  <script>
+    $(document).ready(function() {
+
+      //date time picker
+      $('#expire').datetimepicker({
+        format: "yyyy-mm-dd",
+        minView: 2,
+        autoclose: true
+      });
+
+      $('#edit').hide();
+
+      $('#response').hide();
+
+      //users table
+      $.getJSON('/user_manage', {},function(data){
+        if(data.info == 'success'){
+              $("#users tbody tr:gt(0)").remove();
+              show_uesrs(data);
+            }
+        else{
+          show_response(data.info);
+        }
+      });
+
+      //users table pagination
+      $('.pagination').on("click","li", function(){ //使用on给动态添加的元素绑定事件
+        $.getJSON($(this).find('a').attr('href'), {},function(data){
+          if(data.info == 'success'){
+              $("#users tbody tr:gt(0)").remove();
+              show_uesrs(data);
+            }
+          else{
+            show_response(data.info);
+          }
+        });
+        return false;//阻止链接跳转
+      });
+
+      function show_uesrs(users){
+        $.each(users.users, function(i, user){
+          var newRow = "<tr>" +
+                       "<td>" + user.id + "</td>" +
+                       "<td>" + user.email + "</td>" +
+                       "<td>" + user.expire+ "</td>" +
+                       "<td>" + user.transfer+ "</td>" +
+                       "<td>" + progress_label(user.usage) + "</td>" +
+                       "<td>" + status_label(user.status) + "</td>" +
+                       '<td class="center">' +
+                          '<button class="button button-primary button-pill button-tiny" id="btn_edit" title="Edit user">' + '\n' +
+                            '<i class="fa fa-pencil-square-o"></i>' +
+                          '</button>' +
+                          '<button class="button button-caution button-pill button-tiny" id="btn_disable" title="Disable user">' + '\n' +
+                            '<i class="fa fa-ban"></i>' +
+                          '</button>' +
+                       '</td>' +
+                       "</tr>";
+          $("#users tr:last").after(newRow);
+        });
+
+        $('.box-footer .pagination').text('');
+        $('.box-footer .pagination').append(pagination(users.page, "/user_manage"));
+      };
+
+      function show_response(response){
+        var header = response.split(':')[0];
+        var body = response.split(':')[1];
+        if(header == 'success' || header == 'info'){
+          $('#response').attr('class', 'box box-success');
+          $('#resp_header').html(header);
+          $('#resp_body').html(body);
+        }
+        else{
+          $('#response').attr('class', 'box box-danger');
+          $('#resp_header').html(header);
+          $('#resp_body').html(body);
+        }
+        $('#response').show();
+      }
+
+      // edit user
+      $('#users').on("click", "#btn_edit", function(){
+        var id = $(this).parents('tr').find('td').get(0).innerHTML;
+        $.getJSON("/user_edit", {id: id}, function(data){
+          $('#edit').show();
+          edit_uesr(data.user);
+        });
+
+        return false;
+      });
+
+      // disable user
+      $('#users').on("click", "#btn_disable", function(){
+        var id = $(this).parents('tr').find('td').get(0).innerHTML;
+        $.getJSON("/user_disable", {id: id}, function(data){
+          show_response(data.info);
+        });
+
+        return false;
+      });
+
+      function edit_uesr(user){
+        $('#info tr:gt(0)').each(function(){
+          $('input[name="id"]').val(user.id);
+          $('#email').val(user.email);
+          $('#transfer').val(user.transfer);
+          $('#expire').val(user.expire);
+        });
+
+        $('#service tr:gt(0)').each(function(){
+          $('input[name="id"]').val(user.id);
+          $('#upload').val(user.upload);
+          $('#download').val(user.download);
+          $('#password').val(user.password);
+          $('#port').val(user.port);
+          $('#enable').val(user.enable);
+        });
+      };
+
+      // user info form
+      $('#form_info').submit(function () {
+        var options = {
+          url: '/save_user_info',
+          type: 'post',
+          success: function (response) {
+            show_response(response.info);
+          }
+        };
+        $(this).ajaxSubmit(options);
+        return false;
+      });
+
+      // service setting form
+      $('#form_service').submit(function () {
+        var options = {
+          url: '/save_service_setting',
+          type: 'post',
+          success: function (response) {
+            show_response(response.info);
+          }
+        };
+        $(this).ajaxSubmit(options);
+        return false;
+      });
+
+      // search form
+      $('#search').submit(function () {
+        var s = 0;
+        var options = {
+          url: '/user_manage',
+          type: 'post',
+          success: function (data) {
+            if(data.info == 'success'){
+              $("#users tbody tr:gt(0)").remove();
+              show_uesrs(data);
+            }
+            else{
+              show_response(data.info);
+            }
+          }
+        };
+
+        if($('#s_port').val()){
+          s |= 1;
+        }
+
+        if($('#s_email').val()){
+          s |= 2;
+        }
+
+        if(s != 0) {
+          $('#s').val(s);
+          $(this).ajaxSubmit(options);
+        }
+
+        return false;
+      });
+
+    });
+  </script>
+{% endblock %}

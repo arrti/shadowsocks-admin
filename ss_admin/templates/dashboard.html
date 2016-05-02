@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+
+{% block header %}
+          <h1>
+            Dashboard
+          </h1>
+          <ol class="breadcrumb">
+            <li><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Dashboard</li>
+          </ol>
+
+{% endblock %}
+
+{% block main %}
+          <div class="row">
+            <div class="col-md-6">
+              <!-- PIE CHART -->
+              <div class="box box-info">
+                <div class="box-header with-border">
+                  <h3 class="box-title">User Status</h3>
+                  <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                  </div>
+                </div>
+                <div class="box-body">
+                  <div class="chart">
+                    <div id="pieChart" style="height:400px;"></div>
+                  </div>
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
+            </div><!-- /.col (LEFT) -->
+
+            <div class="col-md-6">
+              <!-- LINE CHART -->
+              <div class="box box-info">
+                <div class="box-header with-border">
+                  <h3 class="box-title">Transfer Usage</h3>
+                  <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                  </div>
+                </div>
+                <div class="box-body">
+                  <div class="chart">
+                    <div id="gaugeChart" style="height:400px;"></div>
+                  </div>
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
+            </div><!-- /.col (RIGHT) -->
+              
+          </div><!-- /.row -->
+          <div class="row">
+            <div class="col-md-12">
+              <!-- TABLE -->
+              <div class="box">
+                <div class="box-header">
+                  <h3 class="box-title">Online Users</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                  <table class="table table-bordered">
+                    <tr>
+                      <th style="width: 60px">ID</th>
+                      <th>User</th>
+                      <th style="width: 60px">Transfer/GB</th>
+                      <th>Usage</th>
+                      <th style="width: 40px"></th>
+                    </tr>
+                  </table>
+                </div><!-- /.box-body -->
+                <div class="box-footer clearfix">
+                  <div class="pull-left hidden-xs">
+                    Number of online：<strong>0</strong>
+                  </div>
+                  <ul class="pagination pagination-sm no-margin pull-right">
+                  </ul>
+                </div>
+              </div><!-- ./ box -->
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+{% endblock %}
+
+
+{% block js %}
+    <script src="/static/plugins/echarts/echarts.min.js"></script>
+    <script src="/static/js/utils.js"></script>
+{% endblock %}
+
+{% block javascript %}
+  <script>
+    $(document).ready(function() {
+
+
+
+      function show_users_status(active, pending, banned){
+        var pieChart = echarts.init(document.getElementById('pieChart'));
+
+        option = {
+          title : {
+            text: 'User Status',
+            subtext: '',
+            x:'center'
+          },
+          tooltip : {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+          },
+          legend: {
+            orient: 'vertical',
+            left: 'left',
+            data: ['active','pending','banned']
+          },
+          series : [
+            {
+              name: 'user status',
+              type: 'pie',
+              radius : '55%',
+              center: ['50%', '60%'],
+              data:[
+                {value:active, name:'active'},
+                {value:pending, name:'pending'},
+                {value:banned, name:'banned'}
+              ],
+              itemStyle: {
+                emphasis: {
+                  shadowBlur: 10,
+                  shadowOffsetX: 0,
+                  shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+              }
+            }
+          ],
+          color: [
+            "#377bbc", //active
+            "#f4952a", //pending
+            "#c23531"  //banned
+          ]
+        };
+
+        pieChart.setOption(option);
+      };
+
+      function show_transfer_usage(transfer){
+        var gaugeChart = echarts.init(document.getElementById('gaugeChart'));
+        option = {
+          tooltip : {
+            formatter: "{a} <br/>{b} : {c}%"
+          },
+          series: [
+            {
+              name: 'Transfer Usage',
+              type: 'gauge',
+              detail: {formatter:'{value}%'},
+              data: [{value: transfer, name: 'Transfer'}]
+            }
+          ]
+        };
+
+        gaugeChart.setOption(option);
+      };
+
+      function show_online_uesrs(users){
+        $.each(users.online, function(i, user){
+          var newRow = "<tr>" +
+                       "<td>" + user.id + "</td>" +
+                       "<td>" + user.email + "</td>" +
+                       "<td>" + user.transfer+ "</td>" +
+                       "<td>" + progress_bar(user.usage) + "</td>" +
+                       "<td>" + progress_label(user.usage) + "</td>" +
+                       "</tr>"
+          $("table tr:last").after(newRow);
+        });
+        $('.box-footer .pull-left').text('');
+        $('.box-footer .pull-left').append('Number of online：<strong>' + users.number + '</strong>');
+
+        $('.box-footer .pagination').text('');
+        $('.box-footer .pagination').append(pagination(users.page, "/dashboard_online_users"));
+      };
+
+      $.getJSON('/dashboard_users_status', {},function(data){
+        show_users_status(data.active, data.pending, data.banned);
+      });
+
+      $.getJSON('/dashboard_transfer_usage', {},function(data){
+        show_transfer_usage(data.transfer);
+      });
+
+      $.getJSON('/dashboard_online_users', {},function(data){
+        $("table tbody tr:gt(0)").remove();
+        show_online_uesrs(data);
+      });
+
+      $('.pagination').on("click","li", function(){ //使用on给动态添加的元素绑定事件
+        $.getJSON($(this).find('a').attr('href'), {},function(data){
+          $("table tbody tr:gt(0)").remove();
+          show_online_uesrs(data);
+        });
+        return false;//阻止链接跳转
+      });
+
+    });
+  </script>
+
+{% endblock %}
