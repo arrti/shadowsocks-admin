@@ -9,7 +9,7 @@ from ss_admin import app, db, redis
 from ss_admin.models import User
 from ss_admin import utils
 from flask import render_template, jsonify
-from sqlalchemy import func
+from sqlalchemy import func, or_
 
 import time, math
 
@@ -39,7 +39,7 @@ def get_users_status():
         filter(User.upload_transfer + User.download_transfer < User.total_transfer).\
         filter(User.expire_date > now).\
         filter(~User.server_port.in_(active_ports)).count()
-    banned_users = User.query.filter(User.service_enable == 0).filter(User.expire_date > now).count()
+    banned_users = User.query.filter(or_(User.service_enable == 0, User.expire_date > now)).count()
 
     return jsonify(active=active_users, pending=pending_users, banned=banned_users)
 
