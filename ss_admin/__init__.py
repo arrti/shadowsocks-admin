@@ -28,3 +28,4 @@ from ss_admin import models
 from ss_admin.views import dashboard # 路由必须在app的初始化之后
 from ss_admin.views import manage
 from ss_admin.views import add
+from ss_admin.views import login
