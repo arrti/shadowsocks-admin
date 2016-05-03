@@ -29,6 +29,7 @@
 * Flask-Mail
 * Flask-WTF
 * PyMySQL
+* Pillow
 
 # Todo
 * 管理员登录界面
