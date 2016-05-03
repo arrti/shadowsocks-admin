@@ -7,3 +7,4 @@ Flask-And-Redis
 Flask-Mail
 Flask-WTF
 PyMySQL
+Pillow
