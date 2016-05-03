@@ -27,7 +27,7 @@ class Filters():
     def dump_errors(self, errors):
         t = self.jinja2.from_string("""
             {% if errors %}
-            <ul class="errors alert alert-error">
+            <ul class="alert-error">
                 {% for error in errors %}
                     <li>{{ ','.join(errors[error]) }}</li>
                 {% endfor %}
