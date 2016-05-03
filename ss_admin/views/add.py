@@ -9,13 +9,15 @@ from ss_admin import app, db, utils, ss
 from ss_admin.models import User
 from ss_admin.forms import manage
 from flask import render_template, jsonify, request
-from flask_wtf import Form
+from flask.ext.wtf import Form
+from flask.ext.login import login_required
 
 import random
 
 BYTE_TO_GIGABYTE = 1024 * 1024 * 1024
 
 @app.route('/user_add', methods=['POST', 'GET'])
+@login_required
 def user_add():
     if request.method == 'POST':
         form = manage.AddUserForm()

@@ -5,7 +5,7 @@
 from __future__ import absolute_import, division, print_function, \
     with_statement
 
-from ss_admin import db
+from ss_admin import db, login_manager
 
 
 class Admin(db.Model):
@@ -14,3 +14,15 @@ class Admin(db.Model):
     id = db.Column('id', db.Integer, primary_key=True, nullable=False, autoincrement=True)
     email = db.Column('email', db.VARCHAR(128), nullable=True, index=True)
     password = db.Column('password', db.VARCHAR(32), nullable=False)
+
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return unicode(self.id)

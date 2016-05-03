@@ -10,14 +10,15 @@ from ss_admin.models import User
 from ss_admin import utils
 from flask import render_template, jsonify
 from sqlalchemy import func, or_
+from flask.ext.login import login_required
 
 import time, math
 
 
 BYTE_TO_GIGABYTE = 1024 * 1024 * 1024
 
-@app.route('/')
 @app.route('/dashboard')
+@login_required
 def dashboard():
 
 
@@ -25,8 +26,8 @@ def dashboard():
             environment = app.config.get('ENVIRONMENT')
             )
 
-
 @app.route('/dashboard_users_status')
+@login_required
 def get_users_status():
     # users status
     now = time.time()
@@ -44,6 +45,7 @@ def get_users_status():
     return jsonify(active=active_users, pending=pending_users, banned=banned_users)
 
 @app.route('/dashboard_transfer_usage')
+@login_required
 def get_transfer_usage():
     # transfer usage
     transfer_used = db.session.query(func.sum(User.upload_transfer + User.download_transfer)).scalar()
@@ -52,6 +54,7 @@ def get_transfer_usage():
 
 @app.route('/dashboard_online_users')
 @app.route('/dashboard_online_users/<int:page>')
+@login_required
 def get_online_users(page = 1):
     now = time.time()
     expires = now - (app.config.get('ONLINE_LAST_MINUTES') * 60)
