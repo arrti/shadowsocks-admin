@@ -5,7 +5,7 @@
 from __future__ import absolute_import, division, print_function, \
     with_statement
 
-from ss_admin import db, login_manager
+from ss_admin import db
 
 
 class Admin(db.Model):
@@ -26,3 +26,6 @@ class Admin(db.Model):
 
     def get_id(self):
         return unicode(self.id)
+
+    def get_username(self):
+        return self.email
