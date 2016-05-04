@@ -8,7 +8,7 @@ from __future__ import absolute_import, division, print_function, \
 from ss_admin import app, db, redis, utils, ss
 from ss_admin.models import User
 from ss_admin.forms import manage
-from flask import render_template, jsonify, request
+from flask import render_template, jsonify, request, g
 from flask_wtf import Form
 
 import time, math
@@ -18,16 +18,13 @@ BYTE_TO_GIGABYTE = 1024 * 1024 * 1024
 
 @app.route('/manage')
 def users():
-    if request.method == 'POST':
-        pass
-
-    elif request.method == 'GET':
-        form = Form() # for csrf
-        return render_template("manage.html",
-                form = form,
-                environment = app.config.get('ENVIRONMENT'),
-                active_user_user = 'active'
-                )
+    form = Form() # for csrf
+    return render_template("manage.html",
+            form = form,
+            email = g.user.get_username(),
+            environment = app.config.get('ENVIRONMENT'),
+            active_user_user = 'active'
+            )
 
 @app.route('/user_manage', methods=['POST', 'GET'])
 @app.route('/user_manage/<int:page>')
