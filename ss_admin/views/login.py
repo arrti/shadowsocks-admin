@@ -26,13 +26,23 @@ def login():
     elif request.method == 'POST':
         form = admin.login()
         if form.validate_on_submit():
-            user = Admin.query.filter_by(password=form.password.data).first()
-            if user:
-                login_user(user, remember=False)
-                return redirect(request.args.get('next') or url_for('index'))
+            if form.vcode.data != session['verification_code']:
+                flash({u'invalid_v_code': ['verification code not correct']}, 'error')
+                return redirect('login')
+        else:
+            flash(form.errors, 'error')
+            return redirect('login')
 
-        flash(u'email or password not correct', 'error')
-        return redirect('login')
+        secure_password = hashlib.sha1(form.email.data + form.password.data).hexdigest()
+        secure_password_md5 = hashlib.md5(secure_password).hexdigest()
+        user = Admin.query.filter(Admin.email == form.email.data).\
+                           filter(Admin.password == secure_password_md5).first()
+        if user is None:
+            flash({u'user_not_exists': [u'user not exists']}, 'error')
+            return redirect('login')
+
+        login_user(user, remember=False)
+        return redirect(request.args.get('next') or url_for('index'))
 
 @app.route('/v_code')
 def code():
@@ -57,7 +67,7 @@ def index():
 
 @login_manager.user_loader
 def load_user(id):
-    return Admin.query.get(int(id))
+    return Admin.query.get(id)
 
 @app.before_request
 def before_request():

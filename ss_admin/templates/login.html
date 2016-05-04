@@ -12,8 +12,6 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="/static/plugins/adminlte/css/AdminLTE.min.css">
-    <!-- iCheck -->
-    <link rel="stylesheet" href="/static/plugins/icheck/skins/square/blue.css ">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -25,17 +23,19 @@
   <body class="hold-transition login-page">
     <div class="login-box">
       <div class="login-logo">
-        <a href="/login"><b>Shadowsocks</b>Admin</a>
+        <a href="/login"><b>Shadowsocks</b> admin</a>
       </div><!-- /.login-logo -->
       <div class="login-box-body">
-        <p class="login-box-msg">Sign in</p>
+        <p class="login-box-msg">Login to start</p>
         <form action="" method="post">
           {{ form.hidden_tag() }}
-          {% with errors = get_flashed_messages() %}
+          {% with errors = get_flashed_messages(category_filter=["error"]) %}
           {% if errors %}
             <ul class="alert-error">
                 {% for error in errors %}
-                    <li>{{ error }}</li>
+                  {% for e in error %}
+                    <li>{{ ','.join(error[e]) }}</li>
+                  {% endfor %}
                 {% endfor %}
             </ul>
           {% endif %}
@@ -53,20 +53,15 @@
             <a href="javascript:;" id="v_code">
               Can't see? Click here to refresh
             </a>
-            <input type="text" class="form-control" placeholder="Verification code">
+            <input type="text" name="vcode" class="form-control" placeholder="Verification code">
           </div>
           <div class="row">
             <div class="col-xs-8">
-              <div class="checkbox icheck">
-                <label>
-                  <input type="checkbox"> Remember Me
-                </label>
-              </div>
             </div><!-- /.col -->
             <div class="col-xs-4">
-              <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+              <button type="submit" class="btn btn-primary btn-block btn-flat">Login</button>
             </div><!-- /.col -->
-          </div>
+          </div><!-- /.row -->
         </form>
 
       </div><!-- /.login-box-body -->
@@ -76,15 +71,8 @@
     <script src="/static/plugins/jQuery/jQuery-2.1.4.min.js"></script>
     <!-- Bootstrap 3.3.5 -->
     <script src="/static/plugins/bootstrap/js/bootstrap.min.js"></script>
-    <!-- iCheck -->
-    <script src="/static/plugins/icheck/icheck.min.js"></script>
     <script>
-      $(function () {
-        $('input').iCheck({
-          checkboxClass: 'icheckbox_square-blue',
-          radioClass: 'iradio_square-blue',
-          increaseArea: '20%' // optional
-        });
+      $(document).ready(function() {
         $('#v_code').click(function () {
           var src = $('img').attr('src').split('?')[0];
           $.get(src,'',function (img) {
