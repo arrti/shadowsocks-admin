@@ -8,7 +8,7 @@ from __future__ import absolute_import, division, print_function, \
 from ss_admin import app, db, utils, ss
 from ss_admin.models import User
 from ss_admin.forms import manage
-from flask import render_template, jsonify, request
+from flask import render_template, jsonify, request, g
 from flask.ext.wtf import Form
 from flask.ext.login import login_required
 
@@ -35,6 +35,7 @@ def user_add():
         form = Form()
         return render_template("add.html",
                 form=form,
+                email=g.user.get_username(),
                 host=app.config.get('HOST_URL'),
                 port = get_valid_port(),
                 password = utils.generate_password(),

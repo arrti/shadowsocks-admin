@@ -6,9 +6,9 @@ from __future__ import absolute_import, division, print_function, \
     with_statement
 
 from ss_admin import app, db, redis
-from ss_admin.models import User
+from ss_admin.models import User, Admin
 from ss_admin import utils
-from flask import render_template, jsonify
+from flask import render_template, jsonify, g
 from sqlalchemy import func, or_
 from flask.ext.login import login_required
 
@@ -20,9 +20,8 @@ BYTE_TO_GIGABYTE = 1024 * 1024 * 1024
 @app.route('/dashboard')
 @login_required
 def dashboard():
-
-
     return render_template("dashboard.html",
+            email = g.user.get_username(),
             environment = app.config.get('ENVIRONMENT')
             )
 
