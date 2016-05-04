@@ -14,8 +14,8 @@ DROP TABLE IF EXISTS `admin`;
 
 CREATE TABLE `admin` (
   `id` INTEGER(11) NOT NULL AUTO_INCREMENT DEFAULT NULL,
-  `email` VARCHAR(32) NULL,
-  `password` VARCHAR(32) NOT NULL,
+  `email` TEXT NULL,
+  `password` TEXT NOT NULL,
   PRIMARY KEY (`id`)
 );
 
