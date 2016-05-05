@@ -5,12 +5,13 @@
 from __future__ import absolute_import, division, print_function, \
     with_statement
 
-from ss_admin import app, db, utils, ss
+from ss_admin import app, db, utils, ss, mail
 from ss_admin.models import User
 from ss_admin.forms import manage
 from flask import render_template, jsonify, request, g
 from flask.ext.wtf import Form
 from flask.ext.login import login_required
+from flask.ext.mail import Message
 
 import random
 

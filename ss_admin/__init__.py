@@ -9,13 +9,14 @@ from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.redis import Redis
 from flask.ext.login import LoginManager
+from flask.ext.mail import Mail
 
 from helper import Filters
 from shadowsocks import Shadowsocks
 
 app = Flask(__name__)
 app.debug = True
-app.config.from_pyfile('settings.py')
+app.config.from_pyfile('settings_debug.py')
 
 Filters(app.jinja_env).register() # 注册过滤器
 
@@ -31,6 +32,9 @@ login_manager.login_view = 'login'
 db = SQLAlchemy(app)
 redis = Redis(app)
 from ss_admin import models
+
+# mail
+mail = Mail(app)
 
 from ss_admin.views import login
 from ss_admin.views import dashboard # 路由必须在app的初始化之后
