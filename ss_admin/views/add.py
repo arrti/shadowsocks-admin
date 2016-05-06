@@ -24,13 +24,17 @@ def user_add():
         form = manage.AddUserForm()
         if form.validate_on_submit():
             if add_new_user(form):
-                if ss:
+                try:
                     ss.add_port(form.port.data, form.password.data)
+                except:
+                    import traceback
+                    traceback.print_exc()
+                    return jsonify(info='error:Add service on port[%s] failed' % form.port.data)
                 return jsonify(info='success', service={'port': form.port.data, 'password': form.password.data})
             else:
-                return jsonify(info='error: add new user failed')
+                return jsonify(info='error:Add new user failed')
         else:
-            return jsonify(info='error: form validate failed')
+            return jsonify(info='error:Form validate failed')
 
     elif request.method == 'GET':
         form = Form()
@@ -61,7 +65,9 @@ def add_new_user(form):
         user = User(u)
         db.session.add(user)
         db.session.commit()
-    except Exception as e:
+    except:
+        import traceback
+        traceback.print_exc()
         return False
 
     return True

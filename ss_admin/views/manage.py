@@ -124,8 +124,10 @@ def set_user_info():
             user = db.session.query(User).filter(User.id == form.id.data).first()
             if redis.connection.get('%s_t' % user.server_port):
                 redis.connection.set('%s_t' % user.server_port, user.total_transfer) # update total transfer
-        except Exception as e:
-            return jsonify(info="error:Update database failed %s" % e)
+        except:
+            import traceback
+            traceback.print_exc()
+            return jsonify(info="error:Update user info failed")
     else:
         return jsonify(info="error:Form validate failed")
 
@@ -142,17 +144,12 @@ def set_service_setting():
                                                                             User.server_pass: form.password.data,
                                                                             User.service_enable: form.enable.data})
             db.session.commit()
-            # Todo： update shadowsocks redis
             user = db.session.query(User).filter(User.id == form.id.data).first()
-            if ss:
-                ss.update_port(user.server_port, user.server_pass)
-            #     if not ss.update_port(user.server_port, user.server_pass):
-            #         return jsonify(info='info:Service on port[%s] with id %s not start' %(user.server_port, form.id.data))
-            # else:
-            #     return jsonify(info='error:Can not connect to shadowsocks')
-
-        except Exception as e:
-            return jsonify(info="error:Update database failed %s" % e)
+            ss.update_port(user.server_port, user.server_pass)
+        except:
+            import traceback
+            traceback.print_exc()
+            return jsonify(info="error:Update service settings failed")
     else:
         return jsonify(info="error:Form validate failed")
 
@@ -166,14 +163,11 @@ def disable_user_with_id():
         db.session.query(User).filter(User.id == id).update({User.service_enable:0})
         db.session.commit()
         user = db.session.query(User).filter(User.id == id).first()
-        if ss:
-            ss.remove_port(user.server_port)
-        #     if not ss.remove_port(user.server_port):
-        #         return jsonify(info='error:Failed to remove service on port[%s] with id %s' %(user.server_port, id))
-        # else:
-        #     return jsonify(info='error:Can not connect to shadowsocks')
+        ss.remove_port(user.server_port)
 
-    except Exception as e:
-        return jsonify(info='error:Disable user with id %s failed' % e)
+    except:
+        import traceback
+        traceback.print_exc()
+        return jsonify(info='error:Disable user with id %s failed' % id)
 
     return jsonify(info='success:Disable user with id %s success' % id)
