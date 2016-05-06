@@ -122,8 +122,8 @@ def set_user_info():
                                                                             User.expire_date: utils.format_date(form.expire.data, True)})
             db.session.commit() # 一定要提交才能生效
             user = db.session.query(User).filter(User.id == form.id.data).first()
-            if redis.connection.get('%s_t' % user.server_port):
-                redis.connection.set('%s_t' % user.server_port, user.total_transfer) # update total transfer
+            redis.connection.set('%s_t' % user.server_port, user.total_transfer) # update total transfer
+            redis.connection.set('%s_expire' % user.server_port, user.expire_date)  # update expire date
         except:
             import traceback
             traceback.print_exc()
