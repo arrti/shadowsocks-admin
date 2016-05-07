@@ -11,9 +11,9 @@ from ss_admin.forms import manage
 from flask import render_template, jsonify, request, g
 from flask.ext.wtf import Form
 from flask.ext.login import login_required
-from flask.ext.mail import Message
+from flask.ext.mail import Message, MIMEText
 
-import random
+import random, logging
 
 BYTE_TO_GIGABYTE = 1024 * 1024 * 1024
 
@@ -23,18 +23,19 @@ def user_add():
     if request.method == 'POST':
         form = manage.AddUserForm()
         if form.validate_on_submit():
-            if add_new_user(form):
+            if 1 or add_new_user(form):
                 try:
                     ss.add_port(form.port.data, form.password.data)
                 except:
                     import traceback
                     traceback.print_exc()
                     return jsonify(info='error:Add service on port[%s] failed' % form.port.data)
-                return jsonify(info='success', service={'port': form.port.data, 'password': form.password.data})
             else:
                 return jsonify(info='error:Add new user failed')
         else:
             return jsonify(info='error:Form validate failed')
+        send_mail(form.email.data, form.port.data, form.password.data)
+        return jsonify(info='success', service={'port': form.port.data, 'password': form.password.data})
 
     elif request.method == 'GET':
         form = Form()
@@ -80,3 +81,19 @@ def get_valid_port():
         return random.choice(list(original_ports.difference(used_ports)))
     else:
         return random.choice(list(original_ports))
+
+def send_mail(email, port, password):
+    try:
+        msg = Message("Account",
+                      sender=app.config.get('MAIL_USERNAME'),
+                      recipients=[email])
+        msg.html = '<html>' \
+                   '<p>' \
+                   'port:%s <br/> ' \
+                   'password:"%s"' \
+                   '</p>' \
+                   '</html>' %(port, password)
+        mail.send(msg)
+    except:
+        import traceback
+        traceback.print_exc()
