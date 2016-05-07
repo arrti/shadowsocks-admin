@@ -38,5 +38,5 @@ def format_date(time_stamp, to_unix=False):
     return format
 
 def generate_password(length = 16):
-    chars= string.letters + string.digits*3 + '^@!$%&()=?{[]}+~#-_.:,;<>|'
+    chars= string.letters + string.digits*3 + '^@!$%&=?+#-_<>|'
     return ''.join([random.choice(chars) for i in range(length)])
