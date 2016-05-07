@@ -11,14 +11,11 @@ from flask.ext.redis import Redis
 from flask.ext.login import LoginManager
 from flask.ext.mail import Mail
 
-from helper import Filters
 from shadowsocks import Shadowsocks
 
 app = Flask(__name__)
 app.debug = True
 app.config.from_pyfile('settings_debug.py')
-
-Filters(app.jinja_env).register() # 注册过滤器
 
 ss = Shadowsocks()
 if not ss.connect() or not ss.valid():
@@ -37,6 +34,6 @@ from ss_admin import models
 mail = Mail(app)
 
 from ss_admin.views import login
-from ss_admin.views import dashboard # 路由必须在app的初始化之后
+from ss_admin.views import dashboard
 from ss_admin.views import manage
 from ss_admin.views import add
