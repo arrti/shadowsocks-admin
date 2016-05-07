@@ -11,8 +11,7 @@ from ss_admin.forms import manage
 from flask import render_template, jsonify, request, g
 from flask_wtf import Form
 
-import time, math
-
+import time, math, logging
 
 BYTE_TO_GIGABYTE = 1024 * 1024 * 1024
 
@@ -127,6 +126,7 @@ def set_user_info():
         except:
             import traceback
             traceback.print_exc()
+            logging.error('save user info failed')
             return jsonify(info="error:Update user info failed")
     else:
         return jsonify(info="error:Form validate failed")
@@ -149,6 +149,7 @@ def set_service_setting():
         except:
             import traceback
             traceback.print_exc()
+            logging.error('save service settings failed')
             return jsonify(info="error:Update service settings failed")
     else:
         return jsonify(info="error:Form validate failed")
@@ -168,6 +169,7 @@ def disable_user_with_id():
     except:
         import traceback
         traceback.print_exc()
+        logging.error('disable user failed')
         return jsonify(info='error:Disable user with id %s failed' % id)
 
     return jsonify(info='success:Disable user with id %s success' % id)

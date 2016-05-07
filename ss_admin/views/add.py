@@ -29,6 +29,7 @@ def user_add():
                 except:
                     import traceback
                     traceback.print_exc()
+                    logging.error('add service on port[%s] failed')
                     return jsonify(info='error:Add service on port[%s] failed' % form.port.data)
             else:
                 return jsonify(info='error:Add new user failed')
@@ -69,6 +70,7 @@ def add_new_user(form):
     except:
         import traceback
         traceback.print_exc()
+        logging.error('add new user to db failed')
         return False
 
     return True
@@ -97,3 +99,4 @@ def send_mail(email, port, password):
     except:
         import traceback
         traceback.print_exc()
+        logging.error('send email to %s failed' % email)
