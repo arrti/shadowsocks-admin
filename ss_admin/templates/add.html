@@ -201,11 +201,14 @@
               user_config.server_port = response.service.port;
               user_config.password = response.service.password;
               user_config = JSON.stringify(user_config);
+              user_config = user_config.split('{')[1];
+              user_config = user_config.split('}')[0];
               var strs = user_config.split(',');
-              user_config = strs.shift();
+              user_config = '{' + '\r\n' + '\t' + strs.shift();
               strs.forEach(function(str){
-                user_config += ",\r\n" + "  " + str;
+                user_config += ',\r\n' + '\t' + str;
               });
+              user_config += '\r\n' + '}';
               $('#config').val(user_config);
             }
             else{
