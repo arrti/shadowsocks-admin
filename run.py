@@ -3,4 +3,7 @@
 # author arrti
 
 from ss_admin import app
-app.run()
+
+
+if __name__ == '__main__':
+    app.run()
