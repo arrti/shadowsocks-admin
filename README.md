@@ -34,10 +34,10 @@
 # 使用
 
 ## 建立数据表
-通过mysql导入`ss_admin/db/shadowsocks-admin.sql`，建立用于管理员登录的`admin`表。
+通过mysql导入`ss_admin/db/shadowsocks-admin.sql`，建立用于管理员登录的`admin`表，同时建立计划任务，每月1日凌晨01:00将用户表`user`(在shadowsocks多用户版本中建立)中的统计用户使用的流量`u`和`d`清零。
 
 ## 添加管理员
 `add_admin.py`位于项目根目录下，执行`python add_admin.py -u your_email_address -p your_password_to_login`，会将管理员用于登录的email和加密后的密码保存到`admin`表中，默认使用的是与shadowsocks多用户版本相同的配置，根据需要修改文件中的数据库配置参数即可。
 
 # Todo
-* 管理员登录界面
+* <s>管理员登录界面</s>
