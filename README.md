@@ -1,5 +1,5 @@
 # shadowsocks-admin
-基于Flask的[shadowsocks多用户版本](http://git.oschina.net/arrti/shadowsocks/tree/dev)的后台管理网站，主要对shadowsocks多用户版本使用的mysql和redis数据库进行管理，同时与其通过unix socket进行交互。
+基于Flask的[shadowsocks多用户版本](http://git.oschina.net/arrti/shadowsocks/tree/dev)的后台管理网站，主要对shadowsocks多用户版本使用的mysql和redis数据库进行管理，同时与其通过unix socket进行交互。网站模板使用的是[AdminLTE](https://github.com/almasaeed2010/AdminLTE)。
 # 功能
 ## dashboard  
 * 统计用户的服务状态
