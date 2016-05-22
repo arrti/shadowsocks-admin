@@ -18,7 +18,11 @@
 
 # 参数配置
 * 网站参数配置位于`settings.py`文件
-* shadowsocks相关内容位于`shadowsocks.py`文件
+* shadowsocks相关内容位于`shadowsocks.py`文件  
+
+# 数据库
+* mysql  
+* redis
 
 # 依赖
 * WTForms
