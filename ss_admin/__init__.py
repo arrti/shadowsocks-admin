@@ -14,7 +14,7 @@ from flask.ext.mail import Mail
 from shadowsocks import Shadowsocks
 
 app = Flask(__name__)
-app.debug = True
+app.debug = False
 app.config.from_pyfile('settings.py')
 
 ss = Shadowsocks()
