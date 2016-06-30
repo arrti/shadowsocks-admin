@@ -23,14 +23,15 @@ def user_add():
     if request.method == 'POST':
         form = manage.AddUserForm()
         if form.validate_on_submit():
-            if 1 or add_new_user(form):
-                try:
-                    ss.add_port(form.port.data, form.password.data)
-                except:
-                    import traceback
-                    traceback.print_exc()
-                    logging.error('add service on port[%s] failed')
-                    return jsonify(info='error:Add service on port[%s] failed' % form.port.data)
+            if add_new_user(form):
+                if form.enable.data:
+                    try:
+                        ss.add_port(form.port.data, form.password.data)
+                    except:
+                        import traceback
+                        traceback.print_exc()
+                        logging.error('add service on port[%s] failed')
+                        return jsonify(info='error:Add service on port[%s] failed' % form.port.data)
             else:
                 return jsonify(info='error:Add new user failed')
         else:
