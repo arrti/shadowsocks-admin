@@ -188,7 +188,7 @@ QQ邮箱的设置：
 
 ## 运行
 * 将`config/nginx/shadowsocks-admin.conf`文件链接到`/etc/nginx/conf.d`，然后执行`sudo service nginx start`来启动nginx服务；
-* 执行`uwsgi --ini /path/to/shadowsocks-admin/config/uwsgi/shadowsocks-admin.ini`（`hadowsocks-admin.ini`的绝对路径）来启动uwsgi服务；
+* 执行`uwsgi --ini /path/to/shadowsocks-admin/config/uwsgi/shadowsocks-admin.ini`（`shadowsocks-admin.ini`的绝对路径）来启动uwsgi服务；
 * 启动[多用户版本的shadowoscks](https://github.com/arrti/shadowsocks/tree/multiuser)的server服务。   
 
 现在在浏览器上输入`127.0.0.1`（也就是nginx配置文件的`server_name`）即可打开管理网站的登录界面：    
